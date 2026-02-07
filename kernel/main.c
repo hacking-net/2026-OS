@@ -97,9 +97,8 @@ static void handle_rm(const char *arg) {
   }
 }
 
-static void handle_echo(char *command) {
-  char *rest = command + 4;
-  rest = (char *)skip_spaces(rest);
+static void handle_echo(char *args) {
+  char *rest = (char *)skip_spaces(args);
   if (!rest || !rest[0]) {
     console_write_line("Uzycie: echo <tekst> [> <plik>]");
     return;
@@ -171,44 +170,51 @@ static void handle_command(const char *command) {
     mutable_command[i] = command[i];
   }
   mutable_command[i] = '\0';
-  char *mutable_ptr = mutable_command;
-  if (streq(command, "help")) {
+  char *cmd = mutable_command;
+  char *args = find_char(mutable_command, ' ');
+  if (args) {
+    *args = '\0';
+    args = (char *)skip_spaces(args + 1);
+  } else {
+    args = (char *)"";
+  }
+  if (streq(cmd, "help")) {
     console_write_line("help  clear  about  ls  cat  echo  touch  rm  stat  df");
     return;
   }
-  if (streq(command, "clear")) {
+  if (streq(cmd, "clear")) {
     console_clear();
     return;
   }
-  if (streq(command, "about")) {
+  if (streq(cmd, "about")) {
     console_write_line("2026-OS kernel shell (minimal)");
     return;
   }
-  if (streq(command, "ls")) {
+  if (streq(cmd, "ls")) {
     handle_ls();
     return;
   }
-  if (streq(command, "cat")) {
-    handle_cat(skip_spaces(command + 3));
+  if (streq(cmd, "cat")) {
+    handle_cat(args);
     return;
   }
-  if (streq(command, "touch")) {
-    handle_touch(skip_spaces(command + 5));
+  if (streq(cmd, "touch")) {
+    handle_touch(args);
     return;
   }
-  if (streq(command, "rm")) {
-    handle_rm(skip_spaces(command + 2));
+  if (streq(cmd, "rm")) {
+    handle_rm(args);
     return;
   }
-  if (streq(command, "echo")) {
-    handle_echo(mutable_ptr);
+  if (streq(cmd, "echo")) {
+    handle_echo(args);
     return;
   }
-  if (streq(command, "stat")) {
-    handle_stat(skip_spaces(command + 4));
+  if (streq(cmd, "stat")) {
+    handle_stat(args);
     return;
   }
-  if (streq(command, "df")) {
+  if (streq(cmd, "df")) {
     handle_df();
     return;
   }
