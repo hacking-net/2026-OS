@@ -73,4 +73,10 @@ $(KERNEL_BIN): $(KERNEL_ELF)
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all clean
+iso: all
+	./build_iso.sh
+
+run: iso
+	qemu-system-x86_64 -cdrom $(BUILD_DIR)/2026-os.iso
+
+.PHONY: all clean iso run

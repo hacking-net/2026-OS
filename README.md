@@ -100,3 +100,12 @@ make
 ```
 
 Po uruchomieniu kernel oferuje minimalną konsolę z komendami `help`, `clear`, `about`.
+
+### Uruchamianie w QEMU
+Wymaga `grub-mkrescue` oraz `xorriso`.
+
+```bash
+cd kernel
+make iso
+make run
+```
