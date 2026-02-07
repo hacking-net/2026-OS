@@ -101,6 +101,28 @@ make
 
 Po uruchomieniu kernel oferuje minimalną konsolę z komendami `help`, `clear`, `about`, `ls`, `cat`, `echo`, `touch`, `rm`, `stat`, `df`, `pwd`, `cd`, `mkdir`, `rmdir`.
 
+### Checklist testów CLI/VFS (Krok 1)
+Po `make run` w QEMU wykonaj kolejno:
+
+```
+help
+ls
+pwd
+cat readme.txt
+echo test > test.txt
+cat test.txt
+stat test.txt
+mkdir docs
+cd docs
+pwd
+echo Hello > note.txt
+ls
+cd ..
+rmdir docs
+rm test.txt
+df
+```
+
 ### Uruchamianie w QEMU
 Wymaga `grub-mkrescue` oraz `xorriso`.
 

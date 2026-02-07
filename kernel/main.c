@@ -307,6 +307,9 @@ static void handle_command(const char *command, int *current_dir) {
   if (command[0] == '\0') {
     return;
   }
+  if (!vfs_is_dir(*current_dir)) {
+    *current_dir = vfs_root();
+  }
   char mutable_command[COMMAND_MAX];
   uint8_t i = 0;
   for (; i + 1 < COMMAND_MAX && command[i]; ++i) {
