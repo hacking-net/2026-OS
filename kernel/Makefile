@@ -74,7 +74,7 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 iso: all
-	./build_iso.sh
+	bash ./build_iso.sh
 
 run: iso
 	qemu-system-x86_64 -cdrom $(BUILD_DIR)/2026-os.iso
