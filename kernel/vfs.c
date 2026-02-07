@@ -109,6 +109,14 @@ int vfs_remove(const char *name) {
   return 0;
 }
 
+int vfs_size(const char *name) {
+  int index = vfs_find_index(name);
+  if (index < 0) {
+    return -1;
+  }
+  return vfs_files[index].size;
+}
+
 uint8_t vfs_count(void) {
   uint8_t count = 0;
   for (uint8_t i = 0; i < VFS_MAX_FILES; ++i) {
@@ -130,4 +138,8 @@ const char *vfs_name_at(uint8_t index) {
     }
   }
   return 0;
+}
+
+uint8_t vfs_capacity(void) {
+  return VFS_MAX_FILES;
 }

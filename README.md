@@ -99,7 +99,7 @@ cd kernel
 make
 ```
 
-Po uruchomieniu kernel oferuje minimalną konsolę z komendami `help`, `clear`, `about`, `ls`, `cat`, `echo`, `touch`, `rm`.
+Po uruchomieniu kernel oferuje minimalną konsolę z komendami `help`, `clear`, `about`, `ls`, `cat`, `echo`, `touch`, `rm`, `stat`, `df`.
 
 ### Uruchamianie w QEMU
 Wymaga `grub-mkrescue` oraz `xorriso`.

@@ -101,12 +101,12 @@ static void handle_echo(char *command) {
   char *rest = command + 4;
   rest = (char *)skip_spaces(rest);
   if (!rest || !rest[0]) {
-    console_write_line("Uzycie: echo <tekst> > <plik>");
+    console_write_line("Uzycie: echo <tekst> [> <plik>]");
     return;
   }
   char *gt = find_char(rest, '>');
   if (!gt) {
-    console_write_line("Uzycie: echo <tekst> > <plik>");
+    console_write_line(rest);
     return;
   }
   *gt = '\0';
@@ -122,6 +122,45 @@ static void handle_echo(char *command) {
   }
 }
 
+static void console_write_uint16(uint16_t value) {
+  char buffer[6];
+  uint8_t pos = 0;
+  if (value == 0) {
+    console_putc('0');
+    return;
+  }
+  while (value > 0 && pos < 5) {
+    buffer[pos++] = (char)('0' + (value % 10));
+    value /= 10;
+  }
+  while (pos > 0) {
+    console_putc(buffer[--pos]);
+  }
+}
+
+static void handle_stat(const char *arg) {
+  if (!arg || !arg[0]) {
+    console_write_line("Uzycie: stat <plik>");
+    return;
+  }
+  int size = vfs_size(arg);
+  if (size < 0) {
+    console_write_line("Brak takiego pliku");
+    return;
+  }
+  console_write("size=");
+  console_write_uint16((uint16_t)size);
+  console_putc('\n');
+}
+
+static void handle_df(void) {
+  console_write("files=");
+  console_write_uint16(vfs_count());
+  console_write("/");
+  console_write_uint16(vfs_capacity());
+  console_putc('\n');
+}
+
 static void handle_command(const char *command) {
   if (command[0] == '\0') {
     return;
@@ -134,7 +173,7 @@ static void handle_command(const char *command) {
   mutable_command[i] = '\0';
   char *mutable_ptr = mutable_command;
   if (streq(command, "help")) {
-    console_write_line("help  clear  about  ls  cat  echo  touch  rm");
+    console_write_line("help  clear  about  ls  cat  echo  touch  rm  stat  df");
     return;
   }
   if (streq(command, "clear")) {
@@ -163,6 +202,14 @@ static void handle_command(const char *command) {
   }
   if (streq(command, "echo")) {
     handle_echo(mutable_ptr);
+    return;
+  }
+  if (streq(command, "stat")) {
+    handle_stat(skip_spaces(command + 4));
+    return;
+  }
+  if (streq(command, "df")) {
+    handle_df();
     return;
   }
   console_write_line("Nieznana komenda");
