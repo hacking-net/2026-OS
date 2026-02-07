@@ -4,8 +4,12 @@
 .set MB2_CHECKSUM, -(MB2_MAGIC + MB2_ARCH + MB2_HEADER_LENGTH)
 
 .set CR0_PE, 0x1
+.set CR0_MP, 0x2
+.set CR0_EM, 0x4
 .set CR0_PG, 0x80000000
 .set CR4_PAE, 0x20
+.set CR4_OSFXSR, 0x200
+.set CR4_OSXMMEXCPT, 0x400
 .set EFER_MSR, 0xC0000080
 .set EFER_LME, 0x100
 
@@ -82,6 +86,15 @@ long_mode_entry:
   mov %ax, %ss
 
   mov $stack_top, %rsp
+  mov %cr0, %rax
+  and $~CR0_EM, %rax
+  or $CR0_MP, %rax
+  mov %rax, %cr0
+
+  mov %cr4, %rax
+  or $(CR4_OSFXSR | CR4_OSXMMEXCPT), %rax
+  mov %rax, %cr4
+
   call kernel_main
 
 .hang:
