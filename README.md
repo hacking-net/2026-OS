@@ -92,6 +92,8 @@ Struktura na start:
 - `kernel/vfs.c` — prosty RAMFS/VFS (pliki i katalogi w pamięci)
 - `kernel/console.c` — prosta konsola tekstowa
 - `kernel/keyboard.c` — podstawowy sterownik PS/2 (polling)
+- `kernel/interrupts.c` — IDT + PIC (obsługa przerwań)
+- `kernel/timer.c` — PIT/IRQ0 (tick)
 - `kernel/vga.c` — proste wyjście tekstowe VGA
 
 ```bash
@@ -99,7 +101,7 @@ cd kernel
 make
 ```
 
-Po uruchomieniu kernel oferuje minimalną konsolę z komendami `help`, `clear`, `about`, `ls`, `cat`, `echo`, `touch`, `rm`, `stat`, `df`, `pwd`, `cd`, `mkdir`, `rmdir`.
+Po uruchomieniu kernel oferuje minimalną konsolę z komendami `help`, `clear`, `about`, `ls`, `cat`, `echo`, `touch`, `rm`, `stat`, `df`, `pwd`, `cd`, `mkdir`, `rmdir`, `sched`.
 
 ### Checklist testów CLI/VFS (Krok 1)
 Po `make run` w QEMU wykonaj kolejno:
@@ -122,6 +124,23 @@ rmdir docs
 rm test.txt
 df
 ```
+
+### Checklist testów TIMER (Krok 2)
+Po `make run` w QEMU sprawdź, czy co ~1s pojawia się linia `tick`:
+
+```
+tick
+tick
+```
+
+### Checklist testów SCHEDULER (Krok 3)
+Po `make run` w QEMU sprawdź, czy `sched` pokazuje liczniki:
+
+```
+sched
+```
+
+Wynik powinien pokazywać rosnące `ticks` oraz zmieniające się `current` i liczniki `a/b`.
 
 ### Uruchamianie w QEMU
 Wymaga `grub-mkrescue` oraz `xorriso`.

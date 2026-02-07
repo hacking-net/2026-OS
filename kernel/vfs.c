@@ -19,6 +19,7 @@ typedef struct {
 } vfs_node_t;
 
 static vfs_node_t vfs_nodes[VFS_MAX_NODES];
+static uint8_t vfs_ready = 0;
 
 static uint16_t vfs_strlen(const char *s) {
   uint16_t len = 0;
@@ -101,6 +102,18 @@ void vfs_init(void) {
   vfs_nodes[0].parent = -1;
   vfs_strcpy(vfs_nodes[0].name, "/", VFS_NAME_MAX);
   vfs_write_at(0, "readme.txt", "Witaj w 2026-OS!\n");
+  vfs_ready = 1;
+}
+
+void vfs_sanitize(void) {
+  if (!vfs_ready) {
+    vfs_init();
+    return;
+  }
+  if (!vfs_nodes[0].used || vfs_nodes[0].type != VFS_NODE_DIR ||
+      vfs_nodes[0].parent != -1 || !vfs_streq(vfs_nodes[0].name, "/")) {
+    vfs_init();
+  }
 }
 
 int vfs_root(void) {

@@ -1,10 +1,23 @@
 #include "kernel/console.h"
 #include "kernel/init.h"
 #include "kernel/keyboard.h"
+#include "kernel/scheduler.h"
+#include "kernel/timer.h"
 #include "kernel/vfs.h"
 
 #define COMMAND_MAX 64
 #define PATH_MAX 64
+
+static volatile uint64_t task_a_runs = 0;
+static volatile uint64_t task_b_runs = 0;
+
+static void task_a(void) {
+  task_a_runs++;
+}
+
+static void task_b(void) {
+  task_b_runs++;
+}
 
 static int streq(const char *a, const char *b) {
   while (*a && *b) {
@@ -169,6 +182,22 @@ static void console_write_uint16(uint16_t value) {
   }
 }
 
+static void console_write_uint64(uint64_t value) {
+  char buffer[21];
+  uint8_t pos = 0;
+  if (value == 0) {
+    console_putc('0');
+    return;
+  }
+  while (value > 0 && pos < 20) {
+    buffer[pos++] = (char)('0' + (value % 10));
+    value /= 10;
+  }
+  while (pos > 0) {
+    console_putc(buffer[--pos]);
+  }
+}
+
 static void handle_stat(const char *arg, int current_dir) {
   if (!arg || !arg[0]) {
     console_write_line("Uzycie: stat <plik>");
@@ -194,6 +223,20 @@ static void handle_df(void) {
   console_write_uint16(vfs_count());
   console_write("/");
   console_write_uint16(vfs_capacity());
+  console_putc('\n');
+}
+
+static void handle_sched(void) {
+  console_write("ticks=");
+  console_write_uint64(timer_ticks());
+  console_write(" tasks=");
+  console_write_uint16(scheduler_count());
+  console_write(" current=");
+  console_write_uint16(scheduler_current());
+  console_write(" a=");
+  console_write_uint64(task_a_runs);
+  console_write(" b=");
+  console_write_uint64(task_b_runs);
   console_putc('\n');
 }
 
@@ -307,6 +350,7 @@ static void handle_command(const char *command, int *current_dir) {
   if (command[0] == '\0') {
     return;
   }
+  vfs_sanitize();
   if (!vfs_is_dir(*current_dir)) {
     *current_dir = vfs_root();
   }
@@ -326,7 +370,7 @@ static void handle_command(const char *command, int *current_dir) {
   }
   if (streq(cmd, "help")) {
     console_write_line("help  clear  about  ls  cat  echo  touch  rm  stat  df");
-    console_write_line("pwd  cd  mkdir  rmdir");
+    console_write_line("pwd  cd  mkdir  rmdir  sched");
     return;
   }
   if (streq(cmd, "clear")) {
@@ -365,6 +409,10 @@ static void handle_command(const char *command, int *current_dir) {
     handle_df();
     return;
   }
+  if (streq(cmd, "sched")) {
+    handle_sched();
+    return;
+  }
   if (streq(cmd, "pwd")) {
     handle_pwd(*current_dir);
     return;
@@ -390,6 +438,9 @@ void kernel_main(void) {
 
   kernel_init();
   keyboard_init();
+
+  scheduler_add_task(task_a);
+  scheduler_add_task(task_b);
 
   console_write_line("Init: ok");
 

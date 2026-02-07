@@ -15,12 +15,15 @@ KERNEL_BIN := $(BUILD_DIR)/kernel.bin
 
 OBJS := \
   $(BUILD_DIR)/boot.o \
+  $(BUILD_DIR)/interrupts.o \
+  $(BUILD_DIR)/isr.o \
   $(BUILD_DIR)/main.o \
   $(BUILD_DIR)/init.o \
   $(BUILD_DIR)/mm.o \
   $(BUILD_DIR)/process.o \
   $(BUILD_DIR)/scheduler.o \
   $(BUILD_DIR)/ipc.o \
+  $(BUILD_DIR)/timer.o \
   $(BUILD_DIR)/vfs.o \
   $(BUILD_DIR)/console.o \
   $(BUILD_DIR)/keyboard.o \
@@ -33,6 +36,12 @@ $(BUILD_DIR):
 
 $(BUILD_DIR)/boot.o: arch/$(ARCH)/boot.s | $(BUILD_DIR)
 	$(CC) $(ASFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/isr.o: arch/$(ARCH)/interrupts.s | $(BUILD_DIR)
+	$(CC) $(ASFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/interrupts.o: interrupts.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/main.o: main.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -50,6 +59,9 @@ $(BUILD_DIR)/scheduler.o: scheduler.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/ipc.o: ipc.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/timer.o: timer.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/vfs.o: vfs.c | $(BUILD_DIR)

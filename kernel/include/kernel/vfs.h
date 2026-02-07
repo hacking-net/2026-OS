@@ -4,6 +4,7 @@
 #include "kernel/types.h"
 
 void vfs_init(void);
+void vfs_sanitize(void);
 int vfs_write(const char *name, const char *data);
 const char *vfs_read(const char *name);
 int vfs_remove(const char *name);
