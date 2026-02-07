@@ -89,7 +89,7 @@ Struktura na start:
 - `kernel/scheduler.c` — szkielet schedulera
 - `kernel/process.c` — szkielet procesów/wątków
 - `kernel/ipc.c` — szkielet IPC
-- `kernel/vfs.c` — szkielet VFS
+- `kernel/vfs.c` — prosty RAMFS/VFS (pliki w pamięci)
 - `kernel/console.c` — prosta konsola tekstowa
 - `kernel/keyboard.c` — podstawowy sterownik PS/2 (polling)
 - `kernel/vga.c` — proste wyjście tekstowe VGA
@@ -99,7 +99,7 @@ cd kernel
 make
 ```
 
-Po uruchomieniu kernel oferuje minimalną konsolę z komendami `help`, `clear`, `about`.
+Po uruchomieniu kernel oferuje minimalną konsolę z komendami `help`, `clear`, `about`, `ls`, `cat`, `echo`, `touch`, `rm`.
 
 ### Uruchamianie w QEMU
 Wymaga `grub-mkrescue` oraz `xorriso`.
