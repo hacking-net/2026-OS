@@ -295,6 +295,10 @@ int vfs_remove_at(int parent, const char *name) {
 }
 
 uint8_t vfs_list_count(int parent) {
+  if (parent < 0 || parent >= VFS_MAX_NODES || !vfs_nodes[parent].used ||
+      !vfs_is_dir(parent)) {
+    return 0;
+  }
   uint8_t count = 0;
   for (uint8_t i = 0; i < VFS_MAX_NODES; ++i) {
     if (vfs_nodes[i].used && vfs_nodes[i].parent == parent) {
@@ -305,6 +309,10 @@ uint8_t vfs_list_count(int parent) {
 }
 
 int vfs_list_at(int parent, uint8_t index) {
+  if (parent < 0 || parent >= VFS_MAX_NODES || !vfs_nodes[parent].used ||
+      !vfs_is_dir(parent)) {
+    return -1;
+  }
   uint8_t seen = 0;
   for (uint8_t i = 0; i < VFS_MAX_NODES; ++i) {
     if (vfs_nodes[i].used && vfs_nodes[i].parent == parent) {

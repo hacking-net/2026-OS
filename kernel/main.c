@@ -244,6 +244,10 @@ static void handle_ls_path(const char *arg, int current_dir) {
     }
     dir = target;
   }
+  if (!vfs_is_dir(dir)) {
+    console_write_line("Brak takiego katalogu");
+    return;
+  }
   uint8_t count = vfs_list_count(dir);
   if (count == 0) {
     console_write_line("(pusto)");
@@ -251,6 +255,9 @@ static void handle_ls_path(const char *arg, int current_dir) {
   }
   for (uint8_t i = 0; i < count; ++i) {
     int node = vfs_list_at(dir, i);
+    if (node < 0) {
+      continue;
+    }
     const char *name = vfs_name(node);
     if (name) {
       if (vfs_is_dir(node)) {
