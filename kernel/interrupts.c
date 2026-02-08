@@ -27,6 +27,7 @@ struct idt_ptr {
 static struct idt_entry idt[256];
 
 extern void irq0_stub(void);
+extern void isr_stub(void);
 
 static void idt_set_gate(uint8_t vector, void (*handler)(void)) {
   uint64_t addr = (uint64_t)handler;
@@ -76,6 +77,9 @@ void interrupts_init(void) {
     idt[i].offset_mid = 0;
     idt[i].offset_high = 0;
     idt[i].zero = 0;
+  }
+  for (uint8_t vec = 0; vec < 32; ++vec) {
+    idt_set_gate(vec, isr_stub);
   }
   idt_set_gate(0x20, irq0_stub);
 

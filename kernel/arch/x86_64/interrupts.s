@@ -1,6 +1,13 @@
 .section .text
 .global irq0_stub
+.global isr_stub
 .extern irq0_handler
+
+isr_stub:
+  cli
+.hang:
+  hlt
+  jmp .hang
 
 irq0_stub:
   pushq %rax
