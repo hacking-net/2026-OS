@@ -15,5 +15,5 @@ void kernel_init(void) {
   vfs_init();
   interrupts_init();
   timer_init(100);
-  interrupts_enable();
+  // interrupts_enable();
 }
