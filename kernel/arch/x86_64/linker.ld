@@ -2,11 +2,13 @@ OUTPUT_FORMAT(elf64-x86-64)
 ENTRY(_start)
 
 SECTIONS {
-  . = 1M;
+  . = 0;
 
   .multiboot : {
     KEEP(*(.multiboot))
   }
+
+  . = 1M;
 
   .text : {
     *(.text .text.*)
