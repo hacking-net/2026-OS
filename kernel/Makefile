@@ -5,7 +5,7 @@ CC := $(CROSS)gcc
 LD := $(CROSS)ld
 OBJCOPY := $(CROSS)objcopy
 
-CFLAGS := -ffreestanding -m64 -mno-red-zone -Wall -Wextra -O2 -Iinclude
+CFLAGS := -ffreestanding -m64 -mno-red-zone -fcf-protection=none -Wall -Wextra -O2 -Iinclude
 ASFLAGS := -ffreestanding -m64
 LDFLAGS := -T arch/$(ARCH)/linker.ld -nostdlib
 
