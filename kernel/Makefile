@@ -73,7 +73,7 @@ $(KERNEL_BIN): $(KERNEL_ELF)
 clean:
 	rm -rf $(BUILD_DIR)
 
-iso: all
+iso: $(KERNEL_ELF)
 	./build_iso.sh
 
 run: iso
