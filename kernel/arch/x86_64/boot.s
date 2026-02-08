@@ -57,20 +57,20 @@ setup_paging:
   mov %ebx, %eax
   or $0x83, %eax
   mov %eax, (%edi)
-  mov $0, 4(%edi)
+  movl $0, 4(%edi)
   add $0x200000, %ebx
   add $8, %edi
   loop 1b
 
   mov $pd, %eax
   or $0x3, %eax
-  mov %eax, pdpt
-  mov $0, pdpt+4
+  movl %eax, pdpt
+  movl $0, pdpt+4
 
   mov $pdpt, %eax
   or $0x3, %eax
-  mov %eax, pml4
-  mov $0, pml4+4
+  movl %eax, pml4
+  movl $0, pml4+4
 
   ret
 

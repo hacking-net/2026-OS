@@ -64,27 +64,6 @@ static void trim_trailing_spaces(char *s) {
   }
 }
 
-static void handle_ls(void) {
-  uint8_t count = vfs_list_count(vfs_root());
-  if (count == 0) {
-    console_write_line("(pusto)");
-    return;
-  }
-  for (uint8_t i = 0; i < count; ++i) {
-    int node = vfs_list_at(vfs_root(), i);
-    const char *name = vfs_name(node);
-    if (name) {
-      if (vfs_is_dir(node)) {
-        console_write("[");
-        console_write(name);
-        console_write_line("]");
-      } else {
-        console_write_line(name);
-      }
-    }
-  }
-}
-
 static void handle_cat(const char *arg, int current_dir) {
   if (!arg || !arg[0]) {
     console_write_line("Uzycie: cat <plik>");
