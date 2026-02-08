@@ -150,3 +150,6 @@ cd kernel
 make iso
 make run
 ```
+
+Jeśli QEMU pokazuje tylko SeaBIOS i nie startuje systemu, sprawdź czy `build/2026-os.iso` istnieje
+i czy `grub-mkrescue` jest zainstalowany (bez niego ISO nie będzie bootowalne).
