@@ -109,3 +109,5 @@ cd kernel
 make iso
 make run
 ```
+
+GRUB ładuje `build/kernel.elf`, aby nagłówek Multiboot2 pozostał w pierwszych 32 KiB pliku (binarny `kernel.bin` jest nadal generowany jako artefakt pomocniczy). 
