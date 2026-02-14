@@ -177,6 +177,27 @@ static void console_write_uint64(uint64_t value) {
   }
 }
 
+
+static uint16_t parse_u16(const char *text, uint16_t fallback) {
+  const char *s = skip_spaces(text);
+  if (!s || !s[0]) {
+    return fallback;
+  }
+  uint16_t value = 0;
+  while (*s) {
+    if (*s < '0' || *s > '9') {
+      return fallback;
+    }
+    uint16_t digit = (uint16_t)(*s - '0');
+    value = (uint16_t)(value * 10 + digit);
+    s++;
+  }
+  if (value == 0) {
+    return fallback;
+  }
+  return value;
+}
+
 static void handle_stat(const char *arg, int current_dir) {
   if (!arg || !arg[0]) {
     console_write_line("Uzycie: stat <plik>");
@@ -217,6 +238,15 @@ static void handle_sched(void) {
   console_write(" b=");
   console_write_uint64(task_b_runs);
   console_putc('\n');
+}
+
+
+static void handle_step(const char *arg) {
+  uint16_t steps = parse_u16(arg, 1);
+  for (uint16_t i = 0; i < steps; ++i) {
+    scheduler_tick();
+  }
+  handle_sched();
 }
 
 static void handle_pwd(int current_dir) {
@@ -349,7 +379,7 @@ static void handle_command(const char *command, int *current_dir) {
   }
   if (streq(cmd, "help")) {
     console_write_line("help  clear  about  ls  cat  echo  touch  rm  stat  df");
-    console_write_line("pwd  cd  mkdir  rmdir  sched");
+    console_write_line("pwd  cd  mkdir  rmdir  sched  step");
     return;
   }
   if (streq(cmd, "clear")) {
@@ -390,6 +420,10 @@ static void handle_command(const char *command, int *current_dir) {
   }
   if (streq(cmd, "sched")) {
     handle_sched();
+    return;
+  }
+  if (streq(cmd, "step")) {
+    handle_step(args);
     return;
   }
   if (streq(cmd, "pwd")) {
