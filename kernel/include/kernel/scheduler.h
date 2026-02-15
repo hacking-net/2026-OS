@@ -7,6 +7,9 @@ typedef void (*task_fn_t)(void);
 
 void scheduler_init(void);
 int scheduler_add_task(task_fn_t task);
+int scheduler_set_enabled(uint8_t task_id, uint8_t enabled);
+uint8_t scheduler_is_enabled(uint8_t task_id);
+uint64_t scheduler_runs(uint8_t task_id);
 void scheduler_tick(void);
 uint8_t scheduler_count(void);
 uint8_t scheduler_current(void);

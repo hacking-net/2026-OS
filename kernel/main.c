@@ -8,15 +8,10 @@
 #define COMMAND_MAX 64
 #define PATH_MAX 64
 
-static volatile uint64_t task_a_runs = 0;
-static volatile uint64_t task_b_runs = 0;
-
 static void task_a(void) {
-  task_a_runs++;
 }
 
 static void task_b(void) {
-  task_b_runs++;
 }
 
 static int streq(const char *a, const char *b) {
@@ -233,11 +228,36 @@ static void handle_sched(void) {
   console_write_uint16(scheduler_count());
   console_write(" current=");
   console_write_uint16(scheduler_current());
-  console_write(" a=");
-  console_write_uint64(task_a_runs);
-  console_write(" b=");
-  console_write_uint64(task_b_runs);
+  console_write(" t0=");
+  console_write_uint64(scheduler_runs(0));
+  console_write(" t1=");
+  console_write_uint64(scheduler_runs(1));
   console_putc('\n');
+}
+
+static void handle_tasks(void) {
+  uint8_t count = scheduler_count();
+  if (count == 0) {
+    console_write_line("Brak taskow");
+    return;
+  }
+  for (uint8_t i = 0; i < count; ++i) {
+    console_write("id=");
+    console_write_uint16(i);
+    console_write(" state=");
+    console_write(scheduler_is_enabled(i) ? "on" : "off");
+    console_write(" runs=");
+    console_write_uint64(scheduler_runs(i));
+    console_putc('\n');
+  }
+}
+
+static void handle_task_ctl(const char *args, uint8_t enabled) {
+  uint16_t id = parse_u16(args, 0xFFFF);
+  if (id == 0xFFFF || scheduler_set_enabled((uint8_t)id, enabled) != 0) {
+    console_write_line("Uzycie: taskon <id> / taskoff <id>");
+    return;
+  }
 }
 
 
@@ -379,7 +399,7 @@ static void handle_command(const char *command, int *current_dir) {
   }
   if (streq(cmd, "help")) {
     console_write_line("help  clear  about  ls  cat  echo  touch  rm  stat  df");
-    console_write_line("pwd  cd  mkdir  rmdir  sched  step");
+    console_write_line("pwd  cd  mkdir  rmdir  sched  step  tasks  taskon  taskoff");
     return;
   }
   if (streq(cmd, "clear")) {
@@ -424,6 +444,18 @@ static void handle_command(const char *command, int *current_dir) {
   }
   if (streq(cmd, "step")) {
     handle_step(args);
+    return;
+  }
+  if (streq(cmd, "tasks")) {
+    handle_tasks();
+    return;
+  }
+  if (streq(cmd, "taskon")) {
+    handle_task_ctl(args, 1);
+    return;
+  }
+  if (streq(cmd, "taskoff")) {
+    handle_task_ctl(args, 0);
     return;
   }
   if (streq(cmd, "pwd")) {

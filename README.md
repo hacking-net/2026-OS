@@ -101,7 +101,7 @@ cd kernel
 make
 ```
 
-Po uruchomieniu kernel oferuje minimalną konsolę z komendami `help`, `clear`, `about`, `ls`, `cat`, `echo`, `touch`, `rm`, `stat`, `df`, `pwd`, `cd`, `mkdir`, `rmdir`, `sched`, `step`.
+Po uruchomieniu kernel oferuje minimalną konsolę z komendami `help`, `clear`, `about`, `ls`, `cat`, `echo`, `touch`, `rm`, `stat`, `df`, `pwd`, `cd`, `mkdir`, `rmdir`, `sched`, `step`, `tasks`, `taskon`, `taskoff`.
 
 ### Checklist testów CLI/VFS (Krok 1)
 Po `make run` w QEMU wykonaj kolejno:
@@ -140,7 +140,19 @@ Po `make run` w QEMU sprawdź, czy `sched` pokazuje liczniki:
 sched
 ```
 
-Wynik `sched` pokazuje stan schedulera. Gdy IRQ są wyłączone, użyj `step` (np. `step`, `step 10`) aby ręcznie wykonać ticki i zobaczyć zmianę `current` oraz liczników `a/b`.
+Wynik `sched` pokazuje stan schedulera. Gdy IRQ są wyłączone, użyj `step` (np. `step`, `step 10`) aby ręcznie wykonać ticki i zobaczyć zmianę `current` oraz liczników `t0/t1`.
+
+Dla kontroli zadań możesz użyć:
+
+```
+tasks
+taskoff 1
+step 5
+tasks
+taskon 1
+step 5
+tasks
+```
 
 ### Uruchamianie w QEMU
 Wymaga `grub-mkrescue`, `xorriso` oraz `mtools` (`mformat`).
