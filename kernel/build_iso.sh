@@ -28,6 +28,11 @@ if ! command -v grub-mkrescue >/dev/null 2>&1; then
   exit 1
 fi
 
-grub-mkrescue -o "$OUTPUT" "$ISO_ROOT" >/dev/null 2>&1
+if ! command -v xorriso >/dev/null 2>&1; then
+  echo "xorriso not found. Install xorriso." >&2
+  exit 1
+fi
+
+grub-mkrescue -o "$OUTPUT" "$ISO_ROOT"
 
 echo "ISO created at: $OUTPUT"
