@@ -143,7 +143,7 @@ sched
 Wynik `sched` pokazuje stan schedulera. Gdy IRQ są wyłączone, użyj `step` (np. `step`, `step 10`) aby ręcznie wykonać ticki i zobaczyć zmianę `current` oraz liczników `a/b`.
 
 ### Uruchamianie w QEMU
-Wymaga `grub-mkrescue` oraz `xorriso`.
+Wymaga `grub-mkrescue`, `xorriso` oraz `mtools` (`mformat`).
 
 ```bash
 cd kernel

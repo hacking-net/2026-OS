@@ -24,12 +24,17 @@ cp "$BUILD_DIR/kernel.elf" "$ISO_ROOT/boot/kernel.elf"
 cp "$GRUB_CFG_SOURCE" "$ISO_ROOT/boot/grub/grub.cfg"
 
 if ! command -v grub-mkrescue >/dev/null 2>&1; then
-  echo "grub-mkrescue not found. Install grub-mkrescue (grub2) and xorriso." >&2
+  echo "grub-mkrescue not found. Install grub-mkrescue (grub2), xorriso and mtools." >&2
   exit 1
 fi
 
 if ! command -v xorriso >/dev/null 2>&1; then
   echo "xorriso not found. Install xorriso." >&2
+  exit 1
+fi
+
+if ! command -v mformat >/dev/null 2>&1; then
+  echo "mformat not found. Install mtools (required by grub-mkrescue)." >&2
   exit 1
 fi
 
